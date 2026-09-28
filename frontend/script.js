@@ -1,28 +1,35 @@
 async function carregarDados() {
+    const url = "http://localhost:3000/";
 
-    const url = "https://super-engine-jrq6wvv5xp6pcqqg5-3000.app.github.dev/";
+    try {
+        const resposta = await fetch(url);
 
-    const resposta = await fetch(url);
+        const produtos = await resposta.json();
 
-    const dados = await resposta.json();
+        const listaProdutos = document.getElementById("lista-produtos");
 
-    const listaProdutos = document.getElementById("lista-produtos");
+        produtos.forEach((produto) => {
 
-    console.log(dados);
-    console.log(listaProdutos);
+            const card = `
+                <div class="card">
+                    <h2>${produto.nome}</h2>
 
-    dados.forEach(produto => {
+                    <p class="categoria">
+                        Categoria: ${produto.categoria}
+                    </p>
 
-        const card = `
-            <div class="card">
-                <h2>${produto.nome}</h2>
-                <p>Categoria: ${produto.categoria}</p>
-                <p>Preço: R$ ${produto.preco}</p>
-            </div>
-        `;
+                    <p class="preco">
+                        R$ ${produto.preco.toFixed(2).replace(".", ",")}
+                    </p>
+                </div>
+            `;
 
-        listaProdutos.innerHTML += card;
-    });
+            listaProdutos.innerHTML += card;
+        });
+
+    } catch (erro) {
+        console.error("Erro ao carregar os produtos:", erro);
+    }
 }
 
 carregarDados();
